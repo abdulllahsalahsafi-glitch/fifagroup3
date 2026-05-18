@@ -1,3 +1,4 @@
+import React from 'react';
 import * as helpers from './utils/helpers.js';
 import * as competitions from './services/competitions.js';
 import * as finance from './services/finance.js';
@@ -71,6 +72,55 @@ function legacyTopMap(map, members) {
   return rows[0] || null;
 }
 
+function LegacyActiveSeasonMembersPanel({ members = [], financeRows = [], totalForMember, onOpenMember, title, subtitle }) {
+  const rows = Array.isArray(members) ? members.slice(0, 12) : [];
+  if (!rows.length) return null;
+  const css = `
+    .legacyActivePanel{margin:14px 0;padding:13px;border-radius:20px;background:rgba(255,255,255,.035);border:1px solid rgba(0,230,118,.16)}
+    .legacyActivePanelHead{margin-bottom:10px}
+    .legacyActivePanelTitle{font-size:13px;font-weight:900;color:#edf0ff}
+    .legacyActivePanelSub{font-size:10px;color:#8f98bd;margin-top:4px;line-height:1.45}
+    .legacyActivePanelGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .legacyActiveMemberCard{border:1px solid rgba(255,255,255,.08);background:rgba(5,12,28,.78);border-radius:15px;padding:9px;display:flex;gap:8px;align-items:center;text-align:right;cursor:pointer;color:#edf0ff}
+    .legacyActiveMemberAvatar{width:34px;height:34px;border-radius:12px;object-fit:cover;background:rgba(0,230,118,.12);flex:0 0 auto}
+    .legacyActiveMemberInitial{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#00E676,#00D4FF);display:grid;place-items:center;color:#020617;font-weight:900;flex:0 0 auto}
+    .legacyActiveMemberBody{min-width:0;flex:1}
+    .legacyActiveMemberName{font-size:11.5px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .legacyActiveMemberMeta{font-size:9.5px;color:#8f98bd;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  `;
+  return React.createElement('section', { className: 'legacyActivePanel' },
+    React.createElement('style', null, css),
+    React.createElement('div', { className: 'legacyActivePanelHead' },
+      React.createElement('div', { className: 'legacyActivePanelTitle' }, title || 'الأعضاء النشطون'),
+      subtitle ? React.createElement('div', { className: 'legacyActivePanelSub' }, subtitle) : null
+    ),
+    React.createElement('div', { className: 'legacyActivePanelGrid' },
+      rows.map((member, index) => {
+        const id = legacyCleanId(member.id || member.memberId || member.memberid);
+        const name = member.name || member.memberName || id || '-';
+        const image = legacyNormalizeImageUrl(member.image || member.avatar || member.photo || '');
+        const trophies = typeof totalForMember === 'function' ? totalForMember(id) : (member.trophies || member.titles || 0);
+        const balanceRow = (financeRows || []).find((row) => legacySame(row.memberId || row.memberid || row.id, id));
+        const balance = balanceRow?.balance || member.balance || '';
+        return React.createElement('button', {
+          key: id || index,
+          type: 'button',
+          className: 'legacyActiveMemberCard',
+          onClick: () => typeof onOpenMember === 'function' ? onOpenMember(id) : null,
+        },
+          image
+            ? React.createElement('img', { className: 'legacyActiveMemberAvatar', src: image, alt: '' })
+            : React.createElement('div', { className: 'legacyActiveMemberInitial' }, String(name).charAt(0) || '?'),
+          React.createElement('div', { className: 'legacyActiveMemberBody' },
+            React.createElement('div', { className: 'legacyActiveMemberName' }, name),
+            React.createElement('div', { className: 'legacyActiveMemberMeta' }, `${trophies || 0} بطولة${balance ? ' · ' + balance : ''}`)
+          )
+        );
+      })
+    )
+  );
+}
+
 Object.assign(globalThis, {
   normalizeImageUrl: globalThis.normalizeImageUrl || legacyNormalizeImageUrl,
   avatar: globalThis.avatar || legacyAvatar,
@@ -80,4 +130,5 @@ Object.assign(globalThis, {
   getActiveMembers: globalThis.getActiveMembers || legacyGetActiveMembers,
   notificationTimeValue: globalThis.notificationTimeValue || legacyNotificationTimeValue,
   topMap: globalThis.topMap || legacyTopMap,
+  ActiveSeasonMembersPanel: globalThis.ActiveSeasonMembersPanel || LegacyActiveSeasonMembersPanel,
 });
