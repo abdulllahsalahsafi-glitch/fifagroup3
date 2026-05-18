@@ -855,6 +855,38 @@ export default function App() {
     };
   }
 
+  function sortByDateAsc(a, b) {
+    const da = new Date(a.date || 0).getTime();
+    const db = new Date(b.date || 0).getTime();
+    return da - db;
+  }
+
+  function hasRecord(row) {
+    return row && row.id;
+  }
+
+  function getActiveSeasonId(seasons, config) {
+    return cleanId(config?.activeSeasonId || "") || cleanId((seasons || []).find(() => true)?.id || "") || "S6";
+  }
+
+  function findSeason(seasons, seasonId) {
+    return (seasons || []).find((s) => same(s.id, seasonId)) || { id: seasonId || "S6", name: "الموسم السادس" };
+  }
+
+  function getActiveMembers(members) {
+    return (members || []).filter((m) => m?.status !== "inactive" && m?.hidden !== true);
+  }
+
+  function normalizeImageUrl(value) {
+    const url = String(value || "").trim();
+    if (!url) return "";
+    const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (driveMatch?.[1]) return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1200`;
+    const imgurMatch = url.match(/^https?:\/\/imgur\.com\/([A-Za-z0-9]+)$/);
+    if (imgurMatch?.[1]) return `https://i.imgur.com/${imgurMatch[1]}.png`;
+    return url;
+  }
+
   const trophyMap = useMemo(
     () => buildTrophyMap(trophiesMaster),
     [trophiesMaster]
