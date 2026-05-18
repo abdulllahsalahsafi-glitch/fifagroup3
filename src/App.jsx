@@ -888,6 +888,32 @@ export default function App() {
     return url;
   }
 
+  function computeSeasonRanking(members, rows, trophyMap) {
+    return (members || []).map((member) => {
+      const memberRows = (rows || []).filter((r) => same(r.winnerId, member.id));
+      return {
+        ...member,
+        titles: memberRows.length,
+        points: memberRows.reduce((sum, r) => {
+          const trophy = trophyMap[cleanId(r.tournamentId || r.trophyId || "")] || {};
+          return sum + (Number(trophy.points) || 0);
+        }, 0),
+      };
+    }).sort((a, b) => b.points - a.points || b.titles - a.titles);
+  }
+
+  function computeMemberStats(members, tournaments) {
+    const map = {};
+    (members || []).forEach((m) => { map[cleanId(m.id)] = { memberId: cleanId(m.id), trophies: 0, finals: 0, wins: 0, losses: 0, goalsFor: 0, goalsAgainst: 0 }; });
+    (tournaments || []).forEach((t) => {
+      const wId = cleanId(t.winnerId);
+      const rId = cleanId(t.runnerUpId);
+      if (map[wId]) { map[wId].trophies++; map[wId].finals++; map[wId].wins++; }
+      if (map[rId]) { map[rId].finals++; map[rId].losses++; }
+    });
+    return map;
+  }
+
   const trophyMap = useMemo(
     () => buildTrophyMap(trophiesMaster),
     [trophiesMaster]
