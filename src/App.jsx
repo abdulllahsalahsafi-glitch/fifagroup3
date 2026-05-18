@@ -12,7 +12,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
-const LoginPage = lazy(() => import("./components/auth/LoginPage").then(m => ({ default: m.LoginPage })));
+const LoginPageLazy = lazy(() => import("./components/auth/LoginPage").then(m => ({ default: m.LoginPage })));
 const HomePageLazy = lazy(() => import("./components/pages/HomePage").then(m => ({ default: m.HomePage })));
 const MembersPageLazy = lazy(() => import("./components/pages/MembersPage").then(m => ({ default: m.MembersPage })));
 const MyProfilePageLazy = lazy(() => import("./components/pages/MyProfilePage").then(m => ({ default: m.MyProfilePage })));
