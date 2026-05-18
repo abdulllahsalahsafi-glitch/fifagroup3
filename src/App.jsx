@@ -791,6 +791,70 @@ export default function App() {
     }
   }
 
+  async function loadCSV(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return parseCSV(text);
+  }
+
+  async function loadOptionalCSV(url) {
+    try {
+      return await loadCSV(url);
+    } catch {
+      return [];
+    }
+  }
+
+  function parseCSV(text) {
+    const lines = (text || "").split("\n").filter(Boolean);
+    if (!lines.length) return [];
+    return lines.slice(1).map((line) => {
+      const parts = [];
+      let current = "";
+      let inQuotes = false;
+      for (const ch of line) {
+        if (ch === '"') { inQuotes = !inQuotes; continue; }
+        if (ch === "," && !inQuotes) { parts.push(current.trim()); current = ""; continue; }
+        current += ch;
+      }
+      parts.push(current.trim());
+      const [id, ...rest] = parts;
+      const row = { id: cleanId(id) };
+      const remaining = rest.join(" ").trim();
+      const words = remaining.split(/\s+/);
+      return { ...row, words, raw: remaining };
+    });
+  }
+
+  function buildConfig(rows) {
+    if (!Array.isArray(rows) || !rows.length) return DEFAULT_CONFIG;
+    const configRow = rows.find((row) => row.id);
+    if (!configRow) return DEFAULT_CONFIG;
+    return { ...DEFAULT_CONFIG, ...configRow };
+  }
+
+  function buildTrophyMap(rows) {
+    const map = {};
+    (rows || []).forEach((row) => {
+      const id = cleanId(row.id);
+      if (id) map[id] = row;
+    });
+    return map;
+  }
+
+  function normalizeTournamentRow(row, source, trophyMap) {
+    const trophy = trophyMap[cleanId(row.tournamentId || row.trophyId || "")] || {};
+    return {
+      ...row,
+      source: source || row.source || "",
+      name: row.name || trophy.name || "بطولة",
+      seasonId: cleanId(row.seasonId || "") || "S6",
+      winnerId: cleanId(row.winnerId || row.winner || ""),
+      runnerUpId: cleanId(row.runnerUpId || row.runnerUp || ""),
+      date: row.date || row.createdAt || new Date().toISOString().slice(0, 10),
+    };
+  }
+
   const trophyMap = useMemo(
     () => buildTrophyMap(trophiesMaster),
     [trophiesMaster]
