@@ -914,6 +914,87 @@ export default function App() {
     return map;
   }
 
+  function groupMemberTrophies(allTournaments, memberId, trophyMap) {
+    return (allTournaments || []).filter((t) => same(t.winnerId, memberId)).map((t) => ({
+      ...t,
+      trophy: trophyMap[cleanId(t.tournamentId || t.trophyId || "")] || {},
+    }));
+  }
+
+  function groupByTrophy(rows, trophyMap) {
+    const groups = {};
+    (rows || []).forEach((row) => {
+      const key = cleanId(row.tournamentId || row.trophyId || "");
+      if (!groups[key]) groups[key] = { id: key, trophy: trophyMap[key] || {}, items: [] };
+      groups[key].items.push(row);
+    });
+    return Object.values(groups);
+  }
+
+  function buildArchiveSeasons(seasons, allTournaments, trophyMap) {
+    return (seasons || []).map((s) => ({
+      ...s,
+      tournaments: (allTournaments || []).filter((t) => same(t.seasonId, s.id)),
+    }));
+  }
+
+  function emptyMemberStats(memberId) {
+    return { memberId: cleanId(memberId), trophies: 0, finals: 0, wins: 0, losses: 0, goalsFor: 0, goalsAgainst: 0 };
+  }
+
+  function addOfferFee(memberId, amount = OFFER_FEE) {
+    return createMoneyTransfer({ toMemberId: "system", amount: -amount, note: "رسوم تقديم عرض" });
+  }
+
+  function getPlayerStableId(playerOrId) {
+    return cleanId(typeof playerOrId === "string" ? playerOrId : playerOrId?.id || playerOrId?.playerId || "");
+  }
+
+  function loanDurationLabel(row) {
+    const months = Number(row?.loanDuration || row?.duration || 0);
+    if (!months) return "غير محدد";
+    return `${months} ${months === 1 ? "شهر" : "شهور"}`;
+  }
+
+  function isNotificationVisibleToMember(notification, memberId) {
+    if (!notification || !memberId) return false;
+    if (clean(notification.targetMemberId || "") === cleanId(memberId)) return true;
+    if (clean(notification.relatedMemberId || "") === cleanId(memberId)) return true;
+    return false;
+  }
+
+  function pushTokenDocId() {
+    return "FCM_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
+  }
+
+  function adminRewardTypeLabel(type) {
+    const labels = { money_transfer_in: "مكافأة مالية", admin_reward: "مكافأة إدارية" };
+    return labels[clean(type)] || type || "مكافأة";
+  }
+
+  function adminDecisionTypeLabel(type) {
+    const labels = { reward: "مكافأة", penalty: "عقوبة", correction: "تصحيح", discipline: "تأديب" };
+    return labels[clean(type)] || type || "قرار";
+  }
+
+  function getMemberName(members, memberId) {
+    const id = cleanId(memberId);
+    const row = (members || []).find((m) => same(m.id, id));
+    return row?.name || memberId || "-";
+  }
+
+  function avatar(seed) {
+    return "https://api.dicebear.com/8.x/initials/svg?seed=" + encodeURIComponent(seed || "user");
+  }
+
+  function notificationTimeValue(value) {
+    if (!value) return 0;
+    if (typeof value?.toDate === "function") return value.toDate().getTime();
+    if (value?.seconds) return Number(value.seconds) * 1000;
+    const parsed = new Date(value).getTime();
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
   const trophyMap = useMemo(
     () => buildTrophyMap(trophiesMaster),
     [trophiesMaster]
