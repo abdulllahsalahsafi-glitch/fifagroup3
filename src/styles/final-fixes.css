@@ -1,0 +1,90 @@
+
+/* FINAL SAFE MINOR FIXES — built on App(129).jsx only */
+.topSystemInner,
+.topSystemInner.titleOnly{
+  width:min(640px,100%)!important;
+  height:34px!important;
+  display:grid!important;
+  grid-template-columns:36px minmax(0,1fr) 36px!important;
+  align-items:center!important;
+  gap:8px!important;
+  direction:ltr!important;
+  justify-items:stretch!important;
+}
+.topNotifyBtn{
+  position:relative!important;
+  right:auto!important;
+  top:auto!important;
+  transform:none!important;
+  grid-column:1!important;
+  width:38px!important;
+  height:38px!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.08)!important;
+  color:#fff!important;
+  display:grid!important;
+  place-items:center!important;
+}
+.topSystemTitle{
+  grid-column:2!important;
+  width:100%!important;
+  text-align:center!important;
+}
+.topSystemBackBtn,
+.topSystemBackSpacer{
+  grid-column:3!important;
+  width:30px!important;
+  height:30px!important;
+  border-radius:999px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.topSystemBackBtn{
+  border:1px solid rgba(0,230,118,.28)!important;
+  background:rgba(0,230,118,.10)!important;
+  color:#00E676!important;
+  -webkit-text-fill-color:#00E676!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.28),0 0 18px rgba(0,230,118,.10)!important;
+  cursor:pointer!important;
+  padding:0!important;
+}
+.topSystemBackBtn span{
+  display:block!important;
+  font-size:18px!important;
+  line-height:18px!important;
+  font-weight:1000!important;
+  transform:translateX(1px)!important;
+}
+.topSystemBackBtn:active{transform:scale(.94)!important;}
+.topSystemBackSpacer{visibility:hidden!important;}
+.fgMenuBackdrop{
+  background:rgba(0,0,0,.62)!important;
+  backdrop-filter:blur(8px)!important;
+  -webkit-backdrop-filter:blur(8px)!important;
+}
+.fgMenuPanel{
+  background:linear-gradient(145deg,rgba(4,12,28,.97),rgba(6,15,34,.92))!important;
+  border:1px solid rgba(0,230,118,.16)!important;
+  box-shadow:0 40px 90px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  font-family:'Tajawal',Arial,sans-serif!important;
+}
+.fgMenuHeader h2{
+  background:linear-gradient(135deg,#fff 42%,#00E676)!important;
+  -webkit-background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  background-clip:text!important;
+}
+.fgMenuItem{
+  background:linear-gradient(145deg,rgba(4,12,28,.86),rgba(6,15,34,.74))!important;
+  border:1px solid rgba(0,230,118,.13)!important;
+  color:#EDF0FF!important;
+}
+.fgMenuItem:active{border-color:rgba(0,230,118,.34)!important;background:rgba(0,230,118,.10)!important;}
+.fgMenuIcon{background:rgba(0,230,118,.10)!important;border-color:rgba(0,230,118,.20)!important;}
+@media(max-width:720px){
+  .topSystemInner,.topSystemInner.titleOnly{grid-template-columns:34px minmax(0,1fr) 34px!important;height:32px!important;}
+  .topNotifyBtn{width:34px!important;height:34px!important;}
+  .topSystemBackBtn,.topSystemBackSpacer{width:28px!important;height:28px!important;}
+}

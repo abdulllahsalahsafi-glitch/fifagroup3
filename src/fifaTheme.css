@@ -1,0 +1,102 @@
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  FIFA GROUP — UNIFIED THEME v5.0 · 2026                          ║
+   ║  Single source of truth. Replaces:                               ║
+   ║    v3Override.js + v4BottomCurtainFix + v4MenuDirectPolish +     ║
+   ║    v4MenuFinalPolish + v4MenuPolish + v4MenuRebuild +            ║
+   ║    v4ProductionUiPatch + v4SplashHold                            ║
+   ║  Matches the exported home-screen reference exactly.             ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Orbitron:wght@700;800;900&display=swap');
+
+:root{
+  /* ── BRAND ─────────────────────────────────────────── */
+  --fg-green:        #00E676;
+  --fg-green-2:      #00B84C;
+  --fg-green-soft:   rgba(0,230,118,.10);
+  --fg-green-bdr:    rgba(0,230,118,.25);
+  --fg-green-glow:   rgba(0,230,118,.32);
+  --fg-cyan:         #00D4FF;
+  --fg-violet:       #A855F7;
+  --fg-red:          #FF4757;
+  --fg-gold:         #FFD700;
+
+  /* ── SURFACES ──────────────────────────────────────── */
+  --fg-bg:           #02030A;
+  --fg-bg-2:         #05080F;
+  --fg-hero-1:       #040C1C;
+  --fg-hero-2:       #081830;
+  --fg-card:         rgba(255,255,255,.032);
+  --fg-card-bdr:     rgba(255,255,255,.07);
+  --fg-card-deep:    rgba(2,6,23,.44);
+
+  /* ── TEXT ──────────────────────────────────────────── */
+  --fg-text:         #EDF0FF;
+  --fg-text-2:       #C7CCE3;
+  --fg-sub:          #9BA0C0;
+  --fg-sub-2:        #6270A0;
+  --fg-ink:          #020617;  /* on green */
+
+  /* ── TYPE SCALE (UNIFIED) ──────────────────────────── */
+  --fg-font:         'Tajawal', system-ui, sans-serif;
+  --fg-font-display: 'Orbitron', 'Tajawal', sans-serif;
+  --fg-fs-9:    9px;   /* micro caption */
+  --fg-fs-10:   10px;  /* caption */
+  --fg-fs-12:   12px;  /* small */
+  --fg-fs-13:   13px;  /* body */
+  --fg-fs-15:   15px;  /* section h3 */
+  --fg-fs-17:   17px;  /* stat number */
+  --fg-fs-22:   22px;  /* h2 */
+  --fg-fs-28:   28px;  /* h1 / hero */
+
+  /* ── SPACING ──────────────────────────────────────── */
+  --fg-sp-1: 4px;
+  --fg-sp-2: 8px;
+  --fg-sp-3: 12px;
+  --fg-sp-4: 16px;
+  --fg-sp-5: 20px;
+  --fg-sp-6: 24px;
+
+  /* ── RADIUS ───────────────────────────────────────── */
+  --fg-r-sm: 8px;
+  --fg-r-md: 14px;
+  --fg-r-lg: 20px;
+  --fg-r-xl: 28px;
+  --fg-r-pill: 999px;
+
+  /* ── ELEVATION ────────────────────────────────────── */
+  --fg-shadow-1: 0 4px 16px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05);
+  --fg-shadow-2: 0 14px 40px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+  --fg-shadow-3: 0 20px 60px rgba(0,0,0,.50), inset 0 1px 0 rgba(255,255,255,.10);
+  --fg-shadow-cta: 0 8px 24px rgba(0,230,118,.32);
+  --fg-shadow-glow: 0 0 22px rgba(0,230,118,.18);
+
+  /* ── MOTION ───────────────────────────────────────── */
+  --fg-ease: cubic-bezier(.2,.9,.2,1);
+  --fg-dur-fast: 180ms;
+  --fg-dur:      280ms;
+  --fg-dur-slow: 460ms;
+}
+
+/* ── UNIFIED FONT ─────────────────────────────────── */
+html, body, #root, .app,
+button, input, select, textarea,
+h1, h2, h3, h4, h5, p, span, div, label, li,
+.moneyTransferModal, .playerOfferModal, .notificationsModal,
+.sideDrawer, .infoModal, .mainNav, .navBtn{
+  font-family: var(--fg-font) !important;
+}
+
+/* ── KEYFRAMES ───────────────────────────────────── */
+@keyframes fgIn       { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fgCardIn   { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes fgFloat    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+@keyframes fgGlow     { 0%,100%{box-shadow:0 0 8px rgba(0,230,118,.20)} 50%{box-shadow:0 0 22px rgba(0,230,118,.50)} }
+@keyframes fgScan     { 0%,100%{top:0;opacity:0} 50%{top:100%;opacity:.7} }
+@keyframes fgShine    { 0%,100%{transform:translateX(-100%) skewX(-15deg)} 50%{transform:translateX(180%) skewX(-15deg)} }
+@keyframes fgShimmer  { 0%{background-position:-200% center} 100%{background-position:200% center} }
+@keyframes fgLiveDot  { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,71,87,.45)} 50%{opacity:.55;box-shadow:0 0 0 6px transparent} }
+@keyframes fgBounce   { 0%,100%{transform:translateY(0)} 25%,75%{transform:translateY(-4px)} }
+@keyframes fgFill     { from{width:0} to{width:100%} }
+@keyframes fgFade     { 0%{opacity:1} 85%{opacity:1} 100%{opacity:0;pointer-events:none} }
+@keyframes fgPulseDot { 0%,100%{opacity:1} 50%{opacity:.45} }
