@@ -171,6 +171,7 @@ const URLS = {
 };
 
 export default function App() {
+  console.log("App mounted", Date.now());
   const [members, setMembers] = useState([]);
   const [players, setPlayers] = useState([]);
   const [trophiesMaster, setTrophiesMaster] = useState([]);
